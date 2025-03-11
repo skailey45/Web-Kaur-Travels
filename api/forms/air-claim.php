@@ -1,0 +1,87 @@
+<?php
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: https://kaurtravels.es');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Max-Age: 3600');
+
+// Set error reporting
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/air_claim_error.log');													   
+
+// Create logs directory if it doesn't exist
+if (!file_exists(__DIR__ . '/logs')) {
+    mkdir(__DIR__ . '/logs', 0755, true);
+}
+
+// Function to log messages
+function logMessage($level, $message) {
+    $timestamp = date('Y-m-d H:i:s');
+    $logEntry = "[$timestamp] [$level] $message" . PHP_EOL;
+    file_put_contents(__DIR__ . '/logs/air_claim.log', $logEntry, FILE_APPEND);
+}
+
+// Handle preflight OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// Get JSON data from request body
+$input = file_get_contents('php://input');
+$data = json_decode($input, true);
+
+// Log the incoming request
+logMessage('INFO', "Air claim form submission received: " . $input);
+
+// Validate required fields
+if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['flightNumber'])) {
+    http_response_code(400);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Missing required fields'
+    ]);
+    exit();
+
+
+// Process the form data
+logMessage('INFO', "Processing air claim form for: " . $data['email']);
+
+// Send notification email to admin
+$admin_email = 'no-reply@kaurtravels.es';
+$admin_subject = "[AIR CLAIM] Request from " . $data['firstName'] . " " . $data['lastName'];
+$admin_message = "
+    <h2>New Air Claim Request</h2>
+    <p><strong>Name:</strong> " . $data['firstName'] . " " . $data['lastName'] . "</p>
+    <p><strong>Email:</strong> " . $data['email'] . "</p>
+    <p><strong>Phone:</strong> " . ($data['phone'] ?? 'Not provided') . "</p>
+    <p><strong>Flight Number:</strong> " . $data['flightNumber'] . "</p>
+    <p><strong>Issue Type:</strong> " . ($data['issueType'] ?? 'Not provided') . "</p>
+    <p><strong>Full Request:</strong></p>
+    <pre style='background-color: #f5f5f5; padding: 10px; border-radius: 5px; overflow: auto;'>" . json_encode($data, JSON_PRETTY_PRINT) . "</pre>
+";
+
+$headers = [
+    'MIME-Version: 1.0',
+    'Content-type: text/html; charset=utf-8',
+    'From: Kaur Travels <no-reply@kaurtravels.es>',
+    'Reply-To: ' . $data['email'],
+    'X-Mailer: PHP/' . phpversion()
+];
+
+$admin_success = mail($admin_email, $admin_subject, $admin_message, implode("\r\n", $headers));
+
+if ($admin_success) {
+    logMessage('INFO', "Air claim form notification sent to admin: $admin_email");
+} else {
+    logMessage('ERROR', "Failed to send air claim form notification to admin");
+}
+
+// Return success response
+echo json_encode([
+    'success' => true,
+    'message' => 'Air claim form processed successfully'
+]);
