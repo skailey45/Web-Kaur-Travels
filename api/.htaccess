@@ -1,0 +1,46 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# Set security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # CORS Headers - Only allow from our domain
+    Header always set Access-Control-Allow-Origin "https://kaurtravels.es"
+    Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+    Header always set Access-Control-Allow-Credentials "true"
+    Header always set Access-Control-Max-Age "3600"
+</IfModule>
+
+# Handle preflight OPTIONS request
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ $1 [R=200,L]
+
+# Protect sensitive files
+<FilesMatch "\.(env|config|md|gitignore|json|lock)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Route all requests to the forms directory
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^forms/(.*)$ forms/index.php [QSA,L]
+
+# Prevent directory listing
+Options -Indexes
+
+# Deny access to hidden files and directories
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Allow PHP execution
+<Files *.php>
+    Order Allow,Deny
+    Allow from all
+</Files>

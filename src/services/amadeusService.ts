@@ -1,3 +1,14 @@
+import axios from 'axios';
+
+// Create secure axios instance with base URL
+const api = axios.create({
+  baseURL: 'https://test.api.amadeus.com/v1',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
+  timeout: 10000 // 10 second timeout
+});
+
 export interface Airport {
   iataCode: string;
   name: string;
@@ -13,36 +24,35 @@ export const searchAirports = async (keyword: string): Promise<Airport[]> => {
   try {
     if (keyword.length < 2) return [];
 
-    const tokenResponse = await fetch('https://test.api.amadeus.com/v1/security/oauth2/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: 'grant_type=client_credentials&client_id=QlW8LVC4S9cuR6e93qUciPaAnGKDW0Vr&client_secret=sM8Q4wqPj1SmH9Za'
-    });
+    const tokenResponse = await api.post('/security/oauth2/token', 
+      'grant_type=client_credentials' +
+      `&client_id=${import.meta.env.VITE_AMADEUS_CLIENT_ID}` +
+      `&client_secret=${import.meta.env.VITE_AMADEUS_CLIENT_SECRET}`
+    );
 
-    if (!tokenResponse.ok) {
+    if (!tokenResponse.data?.access_token) {
       throw new Error('Failed to get access token');
     }
 
-    const tokenData = await tokenResponse.json();
-    const accessToken = tokenData.access_token;
+    const accessToken = tokenResponse.data.access_token;
 
-    const response = await fetch(
-      `https://test.api.amadeus.com/v1/reference-data/locations?keyword=${encodeURIComponent(keyword)}&subType=AIRPORT&page[limit]=10&view=LIGHT`,
-      {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
+    const response = await api.get('/reference-data/locations', {
+      params: {
+        keyword: encodeURIComponent(keyword),
+        subType: 'AIRPORT',
+        'page[limit]': 10,
+        view: 'LIGHT'
+      },
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
       }
-    );
+    });
 
-    if (!response.ok) {
+    if (!response.data?.data) {
       throw new Error('Failed to fetch airports');
     }
 
-    const data = await response.json();
-    return data.data.map((airport: any) => ({
+    return response.data.data.map((airport: any) => ({
       iataCode: airport.iataCode,
       name: airport.name,
       cityName: airport.address.cityName,

@@ -10,7 +10,6 @@ header('Access-Control-Max-Age: 3600');
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
-ini_set('error_log', __DIR__ . '/air_claim_error.log');													   
 
 // Create logs directory if it doesn't exist
 if (!file_exists(__DIR__ . '/logs')) {
@@ -21,7 +20,7 @@ if (!file_exists(__DIR__ . '/logs')) {
 function logMessage($level, $message) {
     $timestamp = date('Y-m-d H:i:s');
     $logEntry = "[$timestamp] [$level] $message" . PHP_EOL;
-    file_put_contents(__DIR__ . '/logs/air_claim.log', $logEntry, FILE_APPEND);
+    error_log($logEntry, 3, __DIR__ . '/logs/air_claim.log');
 }
 
 // Handle preflight OPTIONS request
@@ -40,12 +39,12 @@ logMessage('INFO', "Air claim form submission received: " . $input);
 // Validate required fields
 if (!isset($data['firstName']) || !isset($data['lastName']) || !isset($data['email']) || !isset($data['flightNumber'])) {
     http_response_code(400);
-    echo json_encode([
+    echo json_encode(array(
         'success' => false,
         'error' => 'Missing required fields'
-    ]);
+    ));
     exit();
-
+}
 
 // Process the form data
 logMessage('INFO', "Processing air claim form for: " . $data['email']);
@@ -64,13 +63,13 @@ $admin_message = "
     <pre style='background-color: #f5f5f5; padding: 10px; border-radius: 5px; overflow: auto;'>" . json_encode($data, JSON_PRETTY_PRINT) . "</pre>
 ";
 
-$headers = [
+$headers = array(
     'MIME-Version: 1.0',
     'Content-type: text/html; charset=utf-8',
     'From: Kaur Travels <no-reply@kaurtravels.es>',
     'Reply-To: ' . $data['email'],
     'X-Mailer: PHP/' . phpversion()
-];
+);
 
 $admin_success = mail($admin_email, $admin_subject, $admin_message, implode("\r\n", $headers));
 
@@ -81,7 +80,7 @@ if ($admin_success) {
 }
 
 // Return success response
-echo json_encode([
+echo json_encode(array(
     'success' => true,
     'message' => 'Air claim form processed successfully'
-]);
+));

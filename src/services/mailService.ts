@@ -1,7 +1,26 @@
 import axios from 'axios';
 
-// Get API URL from environment variables
-const API_URL = import.meta.env.VITE_API_ENDPOINT || '/api/forms';
+// Create secure axios instance with base URL
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_ENDPOINT || '/api/forms',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest'
+  },
+  withCredentials: true,
+  timeout: 15000 // 15 second timeout
+});
+
+// URL validation helper
+const isValidUrl = (url: string): boolean => {
+  const allowedDomains = ['kaurtravels.es'];
+  try {
+    const urlObj = new URL(url);
+    return allowedDomains.includes(urlObj.hostname);
+  } catch {
+    return true; // Allow relative URLs
+  }
+};
 
 interface EmailOptions {
   to: string;
@@ -14,15 +33,10 @@ export const sendMail = async ({ to, subject, html }: EmailOptions) => {
     console.log(`Attempting to send email to: ${to}, subject: ${subject}`);
     
     // Send the email request to the server endpoint
-    const response = await axios.post(`${API_URL}/send-email`, {
+    const response = await api.post('/send-email', {
       to,
       subject,
       html
-    }, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      timeout: 15000 // 15 second timeout
     });
 
     console.log('Email API response:', response.data);
@@ -41,15 +55,10 @@ export const sendMail = async ({ to, subject, html }: EmailOptions) => {
     try {
       console.log('Attempting fallback email method...');
       
-      const fallbackResponse = await axios.post(`${API_URL}/send-email-fallback`, {
+      const fallbackResponse = await api.post('/send-email-fallback', {
         to,
         subject,
         html
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        timeout: 15000
       });
       
       console.log('Fallback API response:', fallbackResponse.data);

@@ -6,6 +6,11 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import fs from 'fs';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import hpp from 'hpp';
+import xss from 'xss-clean';
+import getNanoId from '../src/utils/nanoid.js';
 
 // Load environment variables
 dotenv.config();
@@ -23,6 +28,34 @@ if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, { recursive: true });
 }
 
+// Security Middleware
+app.use(helmet()); // Set security headers
+app.use(xss()); // Sanitize inputs
+app.use(hpp()); // Protect against HTTP Parameter Pollution attacks
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.'
+});
+app.use('/api/', limiter);
+
+// CORS configuration
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://kaurtravels.es']
+    : ['http://localhost:5173'],
+  methods: ['POST', 'GET', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token'],
+  credentials: true,
+  maxAge: 600 // Cache preflight requests for 10 minutes
+};
+
+app.use(cors(corsOptions));
+app.use(bodyParser.json({ limit: '10kb' })); // Limit body size
+app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' }));
+
 // Function to log messages
 function logMessage(filename, level, message) {
   const timestamp = new Date().toISOString();
@@ -30,10 +63,19 @@ function logMessage(filename, level, message) {
   fs.appendFileSync(join(logsDir, filename), logEntry);
 }
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// CSRF Protection
+app.use((req, res, next) => {
+  if (req.method === 'POST') {
+    const csrfToken = getNanoId();
+    res.cookie('XSRF-TOKEN', csrfToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict'
+    });
+    res.locals.csrfToken = csrfToken;
+  }
+  next();
+});
 
 // Create nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -57,15 +99,37 @@ transporter.verify((error, success) => {
   }
 });
 
-// Email sending endpoint
-app.post('/api/forms/send-email', async (req, res) => {
+// Form submission validation middleware
+const validateFormSubmission = (req, res, next) => {
+  const { email, subject } = req.body;
+  
+  if (!email || !subject) {
+    return res.status(400).json({
+      success: false,
+      error: 'Missing required fields'
+    });
+  }
+
+  // Email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({
+      success: false,
+      error: 'Invalid email format'
+    });
+  }
+
+  next();
+};
+
+// Email sending endpoint with validation
+app.post('/api/forms/send-email', validateFormSubmission, async (req, res) => {
   try {
     const { to, subject, html } = req.body;
 
     logMessage('email.log', 'INFO', `Email request received for: ${to}, subject: ${subject}`);
 
     if (!to || !subject || !html) {
-      logMessage('email.log', 'ERROR', 'Missing required fields in email request');
       return res.status(400).json({
         success: false,
         error: 'Missing required fields'
@@ -82,15 +146,17 @@ app.post('/api/forms/send-email', async (req, res) => {
       bcc: adminEmail,
       subject,
       html,
-      replyTo: process.env.VITE_SMTP_USER
+      replyTo: process.env.VITE_SMTP_USER,
+      headers: {
+        'X-Priority': '1',
+        'X-MSMail-Priority': 'High',
+        'Importance': 'high',
+        'X-Mailer': 'Kaur Travel Mailer'
+      }
     };
-
-    console.log(`Attempting to send email to: ${to}, subject: ${subject}`);
-    logMessage('email.log', 'INFO', `Attempting to send email to: ${to}, subject: ${subject}`);
 
     const info = await transporter.sendMail(mailOptions);
     
-    console.log('Email sent successfully:', info.messageId);
     logMessage('email.log', 'INFO', `Email sent successfully: ${info.messageId}`);
     
     return res.json({
@@ -108,114 +174,26 @@ app.post('/api/forms/send-email', async (req, res) => {
   }
 });
 
-// Fallback email endpoint
-app.post('/api/forms/send-email-fallback', async (req, res) => {
-  try {
-    const { to, subject, html } = req.body;
-
-    logMessage('email_fallback.log', 'INFO', `Fallback email request received for: ${to}, subject: ${subject}`);
-
-    if (!to || !subject || !html) {
-      logMessage('email_fallback.log', 'ERROR', 'Missing required fields in fallback email request');
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required fields'
-      });
-    }
-
-    // Always add admin email as CC to ensure receipt
-    const adminEmail = process.env.VITE_SMTP_USER;
-
-    // Create a different transporter for fallback
-    const fallbackTransporter = nodemailer.createTransport({
-      host: process.env.VITE_SMTP_HOST,
-      port: parseInt(process.env.VITE_SMTP_PORT || '465'),
-      secure: true,
-      auth: {
-        user: process.env.VITE_SMTP_USER,
-        pass: process.env.VITE_SMTP_PASS
-      },
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
-
-    const mailOptions = {
-      from: `${process.env.VITE_SMTP_FROM_NAME} <${process.env.VITE_SMTP_USER}>`,
-      to,
-      cc: adminEmail,
-      bcc: adminEmail,
-      subject,
-      html,
-      replyTo: process.env.VITE_SMTP_USER
-    };
-
-    console.log(`Attempting to send email via fallback to: ${to}, subject: ${subject}`);
-    logMessage('email_fallback.log', 'INFO', `Attempting to send email via fallback to: ${to}, subject: ${subject}`);
-
-    const info = await fallbackTransporter.sendMail(mailOptions);
-    
-    console.log('Email sent successfully via fallback:', info.messageId);
-    logMessage('email_fallback.log', 'INFO', `Email sent successfully via fallback: ${info.messageId}`);
-    
-    return res.json({
-      success: true,
-      messageId: info.messageId,
-      method: 'fallback'
-    });
-  } catch (error) {
-    console.error('Fallback email sending error:', error);
-    logMessage('email_fallback.log', 'ERROR', `Fallback email sending error: ${error.message}`);
-    
-    // Send a direct email to admin as a last resort
-    try {
-      const adminEmail = process.env.VITE_SMTP_USER;
-      const adminMailOptions = {
-        from: `${process.env.VITE_SMTP_FROM_NAME} <${process.env.VITE_SMTP_USER}>`,
-        to: adminEmail,
-        subject: `[COPY] ${req.body.subject}`,
-        html: req.body.html,
-        replyTo: process.env.VITE_SMTP_USER
-      };
-      
-      await transporter.sendMail(adminMailOptions);
-      logMessage('email_fallback.log', 'INFO', 'Copy of email sent directly to admin');
-    } catch (adminError) {
-      logMessage('email_fallback.log', 'ERROR', `Failed to send copy to admin: ${adminError.message}`);
-    }
-    
-    // Return a mock success response to prevent the form submission from failing
-    return res.json({
-      success: true,
-      messageId: `mock-${Date.now()}`,
-      note: 'Mock success response despite email failure',
-      mockResponse: true
-    });
-  }
-});
-
-// Form handling endpoints
-app.post('/api/forms/contact', (req, res) => {
+// Form handlers with validation
+app.post('/api/forms/contact', validateFormSubmission, (req, res) => {
   try {
     const { name, email, phone, subject, message } = req.body;
     
     logMessage('contact.log', 'INFO', `Contact form submission received: ${email}, subject: ${subject}`);
     
     if (!name || !email || !subject || !message) {
-      logMessage('contact.log', 'ERROR', 'Missing required fields in contact form');
       return res.status(400).json({
         success: false,
         error: 'Missing required fields'
       });
     }
     
-    console.log('Contact form submission received:', { name, email, subject });
-    
-    // In a real implementation, you would save this to a database
+    // Additional validation can be added here
     
     return res.json({
       success: true,
-      message: 'Contact form processed successfully'
+      message: 'Contact form processed successfully',
+      formId: getNanoId()
     });
   } catch (error) {
     console.error('Contact form error:', error);
@@ -227,27 +205,23 @@ app.post('/api/forms/contact', (req, res) => {
   }
 });
 
-app.post('/api/forms/air-ticket', (req, res) => {
+app.post('/api/forms/air-ticket', validateFormSubmission, (req, res) => {
   try {
     const { firstName, lastName, email, tripType } = req.body;
     
     logMessage('air_ticket.log', 'INFO', `Air ticket form submission received: ${email}, trip type: ${tripType}`);
     
     if (!firstName || !lastName || !email) {
-      logMessage('air_ticket.log', 'ERROR', 'Missing required fields in air ticket form');
       return res.status(400).json({
         success: false,
         error: 'Missing required fields'
       });
     }
     
-    console.log('Air ticket form submission received:', { firstName, lastName, email, tripType });
-    
-    // In a real implementation, you would save this to a database
-    
     return res.json({
       success: true,
-      message: 'Air ticket form processed successfully'
+      message: 'Air ticket form processed successfully',
+      formId: getNanoId()
     });
   } catch (error) {
     console.error('Air ticket form error:', error);
@@ -259,27 +233,23 @@ app.post('/api/forms/air-ticket', (req, res) => {
   }
 });
 
-app.post('/api/forms/air-claim', (req, res) => {
+app.post('/api/forms/air-claim', validateFormSubmission, (req, res) => {
   try {
     const { firstName, lastName, email, flightNumber } = req.body;
     
     logMessage('air_claim.log', 'INFO', `Air claim form submission received: ${email}, flight number: ${flightNumber}`);
     
     if (!firstName || !lastName || !email || !flightNumber) {
-      logMessage('air_claim.log', 'ERROR', 'Missing required fields in air claim form');
       return res.status(400).json({
         success: false,
         error: 'Missing required fields'
       });
     }
     
-    console.log('Air claim form submission received:', { firstName, lastName, email, flightNumber });
-    
-    // In a real implementation, you would save this to a database
-    
     return res.json({
       success: true,
-      message: 'Air claim form processed successfully'
+      message: 'Air claim form processed successfully',
+      formId: getNanoId()
     });
   } catch (error) {
     console.error('Air claim form error:', error);

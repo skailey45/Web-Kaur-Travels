@@ -1,10 +1,63 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B94P5TR0P8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      
+      // Set default consent settings for EEA region
+      gtag('consent', 'default', {
+        'analytics_storage': 'denied',
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'region': ['ES']
+      });
+
+      // Enable URL passthrough for better measurement
+      gtag('set', 'url_passthrough', true);
+      
+      // Enable ads data redaction when ad storage is denied
+      gtag('set', 'ads_data_redaction', true);
+
+      gtag('js', new Date());
+      gtag('config', 'G-B94P5TR0P8');
+    </script>
+    
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/kaur.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kaur Travels - Your Travel Partner</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>Kaur Travels - Your Trusted Travel Partner in Barcelona</title>
+    <meta name="description" content="Kaur Travels offers professional travel services including flight bookings, visa assistance, and travel documentation in Barcelona. Expert travel solutions since 2023." />
+    <meta name="keywords" content="travel agency barcelona, flight bookings, visa services, travel documentation, kaur travels, spain travel" />
+    <meta name="author" content="Kaur Travels" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Kaur Travels - Your Travel Partner in Barcelona" />
+    <meta property="og:description" content="Professional travel services including flight bookings, visa assistance, and travel documentation in Barcelona." />
+    <meta property="og:image" content="https://kaurtravels.es/kaur.svg" />
+    <meta property="og:url" content="https://kaurtravels.es" />
+    <meta property="og:type" content="website" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Kaur Travels - Your Travel Partner" />
+    <meta name="twitter:description" content="Professional travel services in Barcelona - flights, visas, and documentation." />
+    <meta name="twitter:image" content="https://kaurtravels.es/kaur.svg" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://kaurtravels.es" />
+    
+    <!-- Additional Meta Tags -->
+    <meta name="robots" content="index, follow" />
+    <meta name="geo.region" content="ES-CT" />
+    <meta name="geo.placename" content="Barcelona" />
+    <meta name="geo.position" content="41.390205;2.154007" />
+    <meta name="ICBM" content="41.390205, 2.154007" />
   </head>
   <body>
     <div id="root"></div>

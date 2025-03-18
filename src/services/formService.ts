@@ -10,8 +10,26 @@ interface FormResponse {
   data?: any;
 }
 
-// API endpoint configuration
-const API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT || '/api/forms';
+// Create secure axios instance with base URL
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_ENDPOINT || '/api/forms',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest'
+  },
+  withCredentials: true
+});
+
+// URL validation helper
+const isValidUrl = (url: string): boolean => {
+  const allowedDomains = ['kaurtravels.es'];
+  try {
+    const urlObj = new URL(url);
+    return allowedDomains.includes(urlObj.hostname);
+  } catch {
+    return true; // Allow relative URLs
+  }
+};
 
 export const submitContactForm = async (formData: {
   name: string;
@@ -23,7 +41,7 @@ export const submitContactForm = async (formData: {
   try {
     console.log("Processing contact form for:", formData.email);
     
-    const response = await axios.post(`${API_ENDPOINT}/contact`, formData);
+    const response = await api.post('/contact', formData);
     
     if (response.data && response.data.success) {
       // Generate email HTML
@@ -81,7 +99,7 @@ export const submitAirTicketForm = async (formData: {
   try {
     console.log("Processing air ticket form for:", formData.email);
     
-    const response = await axios.post(`${API_ENDPOINT}/air-ticket`, formData);
+    const response = await api.post('/air-ticket', formData);
     
     if (response.data && response.data.success) {
       // Generate email HTML
@@ -130,7 +148,7 @@ export const submitAirClaimForm = async (formData: {
   try {
     console.log("Processing air claim form for:", formData.email);
     
-    const response = await axios.post(`${API_ENDPOINT}/air-claim`, formData);
+    const response = await api.post('/air-claim', formData);
     
     if (response.data && response.data.success) {
       // Generate email HTML

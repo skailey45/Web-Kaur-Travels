@@ -13,7 +13,7 @@ define('SMTP_HOST', 'smtp.ionos.es');
 define('SMTP_PORT', 587);
 define('SMTP_USERNAME', 'no-reply@kaurtravels.es');
 define('SMTP_PASSWORD', 'sdGWAtTf47uE6&dQ@');
-define('SMTP_FROM_EMAIL', 'web@kaurtravels.es');
+define('SMTP_FROM_EMAIL', 'no-reply@kaurtravels.es');
 define('SMTP_FROM_NAME', 'Kaur Travels');
 
 // Amadeus API Configuration
