@@ -24,11 +24,10 @@
     "lucide-react": "^0.358.0",
     "nanoid": "^5.0.6",
     "nodemailer": "^6.9.11",
-    "react": "^18.3.0",
+    "react": "^18.2.0",
     "react-datepicker": "^6.2.0",
-    "react-dom": "^18.3.0",
-    "swiper": "^11.0.7",
-    "xss-clean": "^0.1.4"
+    "react-dom": "^18.2.0",
+    "swiper": "^11.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
@@ -54,6 +53,7 @@
     "knip": "^5.0.3",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
+    "terser": "^5.29.2",
     "typescript": "^5.4.2",
     "typescript-eslint": "^7.2.0",
     "vite": "^5.1.6"
@@ -67,43 +67,5 @@
     "postcss": "^8.4.31",
     "semver": "^7.5.4",
     "word-wrap": "^1.2.4"
-  },
-  "funding": [
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/kossnocorp"
-    },
-    {
-      "type": "opencollective",
-      "url": "https://opencollective.com/express"
-    },
-    {
-      "type": "opencollective", 
-      "url": "https://opencollective.com/postcss"
-    },
-    {
-      "type": "opencollective",
-      "url": "https://opencollective.com/eslint"
-    },
-    {
-      "type": "opencollective",
-      "url": "https://opencollective.com/typescript-eslint"
-    },
-    {
-      "type": "github",
-      "url": "https://github.com/vitejs/vite?sponsor=1"
-    },
-    {
-      "type": "github",
-      "url": "https://github.com/sponsors/RubenVerborgh"
-    },
-    {
-      "type": "opencollective",
-      "url": "https://opencollective.com/babel"
-    },
-    {
-      "type": "patreon",
-      "url": "https://www.patreon.com/swiperjs"
-    }
-  ]
+  }
 }

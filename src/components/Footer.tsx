@@ -3,6 +3,13 @@ import {
   Home, 
   Briefcase, 
   FileText, 
+  Plane, 
+  ClipboardCheck, 
+  Info, 
+  Phone,
+  Menu,
+  X,
+  Mail,
   Globe,
   Building2, 
   Shield, 
@@ -11,14 +18,11 @@ import {
   Cookie, 
   Map, 
   ChevronRight,
-  Info, 
+  Info as InfoIcon, 
   AlertCircle, 
   CheckCircle, 
   HelpCircle,
-  MapPin,
-  Mail,
-  Phone,
-  X
+  MapPin
 } from 'lucide-react';
 import Logo from './Logo';
 
@@ -66,7 +70,7 @@ const Footer = () => {
         <div className="px-4 sm:px-8 py-4 sm:py-6 border-t border-gray-100 bg-white/80 backdrop-blur-sm">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-2 text-gray-500 text-sm">
-              <Info className="h-4 w-4 sm:h-5 sm:w-5" />
+              <InfoIcon className="h-4 w-4 sm:h-5 sm:w-5" />
               <span>Last updated: March 2024</span>
             </div>
             <button
@@ -182,6 +186,10 @@ const Footer = () => {
                 <p className="text-gray-600 text-xs sm:text-sm">FUE-2025-04349245</p>
               </div>
               <div className="p-3 sm:p-4">
+                <div className="font-medium text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">IATA Approval</div>
+                <p className="text-gray-600 text-xs sm:text-sm">IATA Number: 78000042</p>
+              </div>
+              <div className="p-3 sm:p-4">
                 <div className="font-medium text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">Registered Address</div>
                 <p className="text-gray-600 text-xs sm:text-sm">C/Martorell 19, 08904 Spain, Barcelona</p>
               </div>
@@ -283,6 +291,10 @@ const Footer = () => {
                 <p className="text-gray-600 text-xs sm:text-sm">FUE-2025-04349245</p>
               </div>
               <div className="p-3 sm:p-4">
+                <div className="font-medium text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">IATA Approval</div>
+                <p className="text-gray-600 text-xs sm:text-sm">IATA Number: 78000042</p>
+              </div>
+              <div className="p-3 sm:p-4">
                 <div className="font-medium text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">Registered Address</div>
                 <p className="text-gray-600 text-xs sm:text-sm">C/Martorell 19, 08904 Spain, Barcelona</p>
               </div>
@@ -378,6 +390,10 @@ const Footer = () => {
                 <p className="text-gray-600 text-xs sm:text-sm">FUE-2025-04349245</p>
               </div>
               <div className="p-3 sm:p-4">
+                <div className="font-medium text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">IATA Approval</div>
+                <p className="text-gray-600 text-xs sm:text-sm">IATA Number: 78000042</p>
+              </div>
+              <div className="p-3 sm:p-4">
                 <div className="font-medium text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">Registered Address</div>
                 <p className="text-gray-600 text-xs sm:text-sm">C/Martorell 19, 08904 Spain, Barcelona</p>
               </div>
@@ -453,6 +469,7 @@ const Footer = () => {
             <h5 className="font-semibold text-base sm:text-lg text-gray-900 mb-3 sm:mb-4">Legal Information</h5>
             <ul className="space-y-2">
               <li>
+                
                 <button 
                   onClick={() => setActiveModal('privacy')}
                   className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors w-full text-left text-sm"
@@ -498,6 +515,10 @@ const Footer = () => {
               <p className="text-gray-600 text-xs sm:text-sm">FUE-2025-04349245</p>
             </div>
             <div className="p-3 sm:p-4">
+              <div className="font-medium text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">IATA Approval</div>
+              <p className="text-gray-600 text-xs sm:text-sm">IATA Number: 78000042</p>
+            </div>
+            <div className="p-3 sm:p-4">
               <div className="font-medium text-gray-900 mb-1 sm:mb-2 text-sm sm:text-base">Registered Address</div>
               <p className="text-gray-600 text-xs sm:text-sm">C/Martorell 19, 08904 Spain, Barcelona</p>
             </div>
@@ -525,6 +546,10 @@ const Footer = () => {
               <div className="flex items-center gap-2">
                 <Shield className="h-4 w-4 md:h-5 md:w-5 text-blue-400 flex-shrink-0" />
                 <span>Tourism License: FUE-2025-04349245</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4 md:h-5 md:w-5 text-green-400 flex-shrink-0" />
+                <span>IATA APPROVED: 78000042</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 md:h-5 md:w-5 flex-shrink-0" />

@@ -1,5 +1,27 @@
 import React from 'react';
-import { Plane, Hotel, Umbrella, Map, Clock, CreditCard, Shield, Heart, Star, Globe2, Headphones, Wallet, Users, Award, CheckCircle, Briefcase } from 'lucide-react';
+import { 
+  Plane, 
+  Hotel, 
+  Umbrella, 
+  Map, 
+  Clock, 
+  CreditCard, 
+  Shield, 
+  Heart, 
+  Star, 
+  Globe2, 
+  Headphones, 
+  Wallet, 
+  Users, 
+  Award, 
+  CheckCircle, 
+  Briefcase,
+  ArrowRight,
+  Sparkles,
+  Target,
+  Compass,
+  Phone
+} from 'lucide-react';
 
 const Services = () => {
   const stats = [
@@ -9,222 +31,181 @@ const Services = () => {
     { icon: <Award className="h-6 w-6" />, value: "Best", label: "Price Guarantee" }
   ];
 
+  const mainServices = [
+    {
+      icon: <Plane className="h-8 w-8" />,
+      title: "Flight Bookings",
+      description: "Best deals on domestic and international flights with flexible booking options.",
+      image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80",
+      features: [
+        "Multiple airlines comparison",
+        "Price match guarantee",
+        "24/7 booking support",
+        "Free cancellation options"
+      ],
+      color: "blue"
+    },
+    {
+      icon: <Hotel className="h-8 w-8" />,
+      title: "Hotel Reservations",
+      description: "Handpicked accommodations from luxury resorts to boutique hotels worldwide.",
+      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80",
+      features: [
+        "Best rate guarantee",
+        "Free cancellation options",
+        "Verified guest reviews",
+        "Luxury amenities"
+      ],
+      color: "purple"
+    },
+    {
+      icon: <Umbrella className="h-8 w-8" />,
+      title: "Holiday Packages",
+      description: "Curated vacation packages tailored to your preferences and budget.",
+      image: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80",
+      features: [
+        "All-inclusive options",
+        "Customizable itineraries",
+        "Group discounts",
+        "Expert planning"
+      ],
+      color: "green"
+    }
+  ];
+
+  const additionalFeatures = [
+    {
+      icon: <Target className="h-6 w-6" />,
+      title: "Expert Planning",
+      description: "Professional travel advisors to help plan your perfect trip"
+    },
+    {
+      icon: <Shield className="h-6 w-6" />,
+      title: "Secure Booking",
+      description: "Safe and encrypted payment processing for peace of mind"
+    },
+    {
+      icon: <Compass className="h-6 w-6" />,
+      title: "Travel Insurance",
+      description: "Comprehensive coverage for worry-free adventures"
+    },
+    {
+      icon: <Phone className="h-6 w-6" />,
+      title: "24/7 Support",
+      description: "Round-the-clock assistance for all your travel needs"
+    }
+  ];
+
   return (
-    <section id="services" className="py-16 md:py-20 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Header with Stats - Improved */}
-        <div className="text-center mb-12 md:mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-4 md:mb-6">
+    <section id="services" className="py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+      {/* Decorative Elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-gradient-to-b from-blue-50/50 to-purple-50/50 blur-3xl transform rotate-12" />
+        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-t from-green-50/50 to-blue-50/50 blur-3xl transform -rotate-12" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
+        {/* Header with Stats */}
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full mb-6">
             <Briefcase className="h-5 w-5 text-blue-600" />
             <span className="text-blue-600 font-semibold">Our Services</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Premium Travel Services
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            Comprehensive Travel Solutions
           </h2>
-          <p className="text-gray-600 text-base md:text-lg max-w-3xl mx-auto mb-8 md:mb-12">
+          <p className="text-gray-600 text-lg max-w-3xl mx-auto mb-12">
             Experience seamless travel planning with our comprehensive range of services designed to make your journey extraordinary.
           </p>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="relative group">
-                <div className="bg-white rounded-2xl shadow-md p-4 md:p-6 transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-1">
-                  <div className="bg-blue-50 rounded-full p-3 md:p-4 inline-flex items-center justify-center mb-3 md:mb-4 transition-transform duration-300 group-hover:scale-110">
+                <div className="bg-white rounded-2xl shadow-md p-6 transition-all duration-300 group-hover:shadow-lg group-hover:-translate-y-1">
+                  <div className="bg-blue-50 rounded-xl p-4 inline-flex mb-4 transition-transform duration-300 group-hover:scale-110">
                     <div className="text-blue-600">{stat.icon}</div>
                   </div>
-                  <div className="font-bold text-xl md:text-2xl text-gray-900 mb-1">{stat.value}</div>
-                  <div className="text-gray-600 text-sm md:text-base">{stat.label}</div>
+                  <div className="font-bold text-2xl text-gray-900 mb-1">{stat.value}</div>
+                  <div className="text-gray-600">{stat.label}</div>
                 </div>
-                <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-300"></div>
+                <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-2xl blur-xl opacity-0 group-hover:opacity-70 transition-opacity duration-300" />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Main Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-20">
-          {/* Flight Bookings */}
-          <div className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
-            <div className="relative h-40 sm:h-48">
-              <div className="absolute inset-0">
-                <img 
-                  src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80"
-                  alt="Flight Bookings"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20"></div>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-                    <Plane className="h-5 w-5 md:h-6 md:w-6" />
+        {/* Main Services */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {mainServices.map((service, index) => (
+            <div key={index} className="group relative bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-500">
+              <div className="relative h-48 overflow-hidden">
+                <div className="absolute inset-0">
+                  <img 
+                    src={service.image}
+                    alt={service.title}
+                    className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent" />
+                </div>
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="bg-white/20 backdrop-blur-sm p-2 rounded-lg">
+                      {service.icon}
+                    </div>
+                    <h3 className="text-2xl font-bold">{service.title}</h3>
                   </div>
-                  <h3 className="text-xl md:text-2xl font-bold">Flight Bookings</h3>
+                </div>
+              </div>
+              <div className="p-6">
+                <p className="text-gray-600 mb-6">{service.description}</p>
+                <div className="space-y-3">
+                  {service.features.map((feature, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-gray-700">
+                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                      <span>{feature}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-            <div className="p-4 md:p-6">
-              <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">Best deals on domestic and international flights with flexible booking options.</p>
-              <div className="space-y-2 md:space-y-3">
-                <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm md:text-base">
-                  <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-                  <span>Multiple airlines comparison</span>
-                </div>
-                <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm md:text-base">
-                  <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-                  <span>Price match guarantee</span>
-                </div>
-                <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm md:text-base">
-                  <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-                  <span>24/7 booking support</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Hotel Reservations */}
-          <div className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
-            <div className="relative h-40 sm:h-48">
-              <div className="absolute inset-0">
-                <img 
-                  src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80"
-                  alt="Hotel Reservations"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20"></div>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-                    <Hotel className="h-5 w-5 md:h-6 md:w-6" />
-                  </div>
-                  <h3 className="text-xl md:text-2xl font-bold">Hotel Reservations</h3>
-                </div>
-              </div>
-            </div>
-            <div className="p-4 md:p-6">
-              <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">Handpicked accommodations from luxury resorts to boutique hotels worldwide.</p>
-              <div className="space-y-2 md:space-y-3">
-                <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm md:text-base">
-                  <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-                  <span>Best rate guarantee</span>
-                </div>
-                <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm md:text-base">
-                  <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-                  <span>Free cancellation options</span>
-                </div>
-                <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm md:text-base">
-                  <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-                  <span>Verified guest reviews</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Holiday Packages */}
-          <div className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 sm:col-span-2 lg:col-span-1">
-            <div className="relative h-40 sm:h-48">
-              <div className="absolute inset-0">
-                <img 
-                  src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80"
-                  alt="Holiday Packages"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/20"></div>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
-                    <Umbrella className="h-5 w-5 md:h-6 md:w-6" />
-                  </div>
-                  <h3 className="text-xl md:text-2xl font-bold">Holiday Packages</h3>
-                </div>
-              </div>
-            </div>
-            <div className="p-4 md:p-6">
-              <p className="text-gray-600 mb-4 md:mb-6 text-sm md:text-base">Curated vacation packages tailored to your preferences and budget.</p>
-              <div className="space-y-2 md:space-y-3">
-                <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm md:text-base">
-                  <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-                  <span>All-inclusive options</span>
-                </div>
-                <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm md:text-base">
-                  <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-                  <span>Customizable itineraries</span>
-                </div>
-                <div className="flex items-center gap-2 md:gap-3 text-gray-700 text-sm md:text-base">
-                  <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-                  <span>Group discounts available</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          ))}
         </div>
 
-        {/* Additional Features - Improved Section */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          <div className="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-blue-600/30 opacity-80 transition-opacity group-hover:opacity-90"></div>
-            <div className="relative z-10 p-4 md:p-8">
-              <div className="mb-4 md:mb-6 flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-full bg-white shadow-md transition-transform duration-300 group-hover:scale-110">
-                <Clock className="h-6 w-6 md:h-8 md:w-8 text-blue-600" />
+        {/* Additional Features */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {additionalFeatures.map((feature, index) => (
+            <div key={index} className="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl bg-white">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative z-10 p-6">
+                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-blue-50 to-blue-100 transition-transform duration-300 group-hover:scale-110">
+                  {feature.icon}
+                </div>
+                <h4 className="mb-2 text-xl font-bold text-gray-900">{feature.title}</h4>
+                <p className="text-gray-600">{feature.description}</p>
               </div>
-              <h4 className="mb-2 md:mb-3 text-lg md:text-xl font-bold text-gray-900">Fast Booking</h4>
-              <p className="text-gray-700 text-sm md:text-base">Quick and easy booking process with instant confirmation</p>
             </div>
-            <div className="absolute -bottom-1 -right-1 h-24 w-24 rounded-full bg-blue-100 opacity-50 blur-xl"></div>
-          </div>
-
-          <div className="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-purple-600/30 opacity-80 transition-opacity group-hover:opacity-90"></div>
-            <div className="relative z-10 p-4 md:p-8">
-              <div className="mb-4 md:mb-6 flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-full bg-white shadow-md transition-transform duration-300 group-hover:scale-110">
-                <Shield className="h-6 w-6 md:h-8 md:w-8 text-purple-600" />
-              </div>
-              <h4 className="mb-2 md:mb-3 text-lg md:text-xl font-bold text-gray-900">Secure Payments</h4>
-              <p className="text-gray-700 text-sm md:text-base">Safe and encrypted payment processing</p>
-            </div>
-            <div className="absolute -bottom-1 -right-1 h-24 w-24 rounded-full bg-purple-100 opacity-50 blur-xl"></div>
-          </div>
-
-          <div className="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-green-600/30 opacity-80 transition-opacity group-hover:opacity-90"></div>
-            <div className="relative z-10 p-4 md:p-8">
-              <div className="mb-4 md:mb-6 flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-full bg-white shadow-md transition-transform duration-300 group-hover:scale-110">
-                <Users className="h-6 w-6 md:h-8 md:w-8 text-green-600" />
-              </div>
-              <h4 className="mb-2 md:mb-3 text-lg md:text-xl font-bold text-gray-900">Expert Support</h4>
-              <p className="text-gray-700 text-sm md:text-base">Professional travel advisors at your service</p>
-            </div>
-            <div className="absolute -bottom-1 -right-1 h-24 w-24 rounded-full bg-green-100 opacity-50 blur-xl"></div>
-          </div>
-
-          <div className="group relative overflow-hidden rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/20 to-orange-600/30 opacity-80 transition-opacity group-hover:opacity-90"></div>
-            <div className="relative z-10 p-4 md:p-8">
-              <div className="mb-4 md:mb-6 flex h-12 w-12 md:h-16 md:w-16 items-center justify-center rounded-full bg-white shadow-md transition-transform duration-300 group-hover:scale-110">
-                <Wallet className="h-6 w-6 md:h-8 md:w-8 text-orange-600" />
-              </div>
-              <h4 className="mb-2 md:mb-3 text-lg md:text-xl font-bold text-gray-900">Best Prices</h4>
-              <p className="text-gray-700 text-sm md:text-base">Competitive rates and special deals</p>
-            </div>
-            <div className="absolute -bottom-1 -right-1 h-24 w-24 rounded-full bg-orange-100 opacity-50 blur-xl"></div>
-          </div>
+          ))}
         </div>
 
         {/* Call to Action */}
-        <div className="mt-12 md:mt-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-6 md:p-12 text-white text-center">
-          <h3 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4">Ready to Start Your Journey?</h3>
-          <p className="text-base md:text-lg mb-6 md:mb-8 opacity-90">Let us help you plan your perfect trip today</p>
-          <a 
-            href="#contact"
-            className="bg-white text-blue-600 px-6 py-3 md:px-8 md:py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors inline-flex items-center gap-2"
-          >
-            Contact Us Now
-            <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </a>
+        <div className="mt-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl p-8 md:p-12 text-white text-center relative overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute -right-40 -top-40 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
+            <div className="absolute -left-40 -bottom-40 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
+          </div>
+          <div className="relative z-10">
+            <h3 className="text-2xl md:text-3xl font-bold mb-4">Ready to Start Your Journey?</h3>
+            <p className="text-lg mb-8 text-white/90 max-w-2xl mx-auto">
+              Let us help you plan your perfect trip today. Our travel experts are ready to assist you.
+            </p>
+            <a 
+              href="#contact"
+              className="inline-flex items-center gap-2 bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors shadow-lg hover:shadow-xl group"
+            >
+              Contact Us Now
+              <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+            </a>
+          </div>
         </div>
       </div>
     </section>
